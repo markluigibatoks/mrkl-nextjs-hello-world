@@ -1,6 +1,6 @@
-import { useGLTF, OrbitControls, Sky, Environment, Cloud } from '@react-three/drei'
+import { useGLTF, useAnimations, OrbitControls, Sky, Environment, Cloud } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 import Layout from "@/components/layout"
 
 import { getAllHelloWorldIds, getAllHelloWorldData } from '@/lib/hello-world'
@@ -24,10 +24,15 @@ export async function getStaticPaths() {
 }
 
 export function Model({ src }) {
-  const model = useGLTF(src)
-  return (
-     <primitive object={model.scene} />
-  )
+
+  const { scene, animations } = useGLTF(src)
+  const { actions } = useAnimations(animations, scene)
+
+  useEffect(() => {
+    actions['05_Colibri_Bird.001Action'].play()
+  })
+
+  return <primitive object={scene} />
 }
 
 export default function HelloWorld ({ src }) {
