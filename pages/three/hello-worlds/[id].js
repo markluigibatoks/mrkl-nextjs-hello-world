@@ -26,10 +26,13 @@ export async function getStaticPaths() {
 export function Model({ src }) {
 
   const { scene, animations } = useGLTF(src)
-  const { actions } = useAnimations(animations, scene)
+  const { names, actions } = useAnimations(animations, scene)
+
+  console.log(names)
+  console.log(actions)
 
   useEffect(() => {
-    actions['05_Colibri_Bird.001Action'].play()
+    actions[names[0]].play()
   })
 
   return <primitive object={scene} />
