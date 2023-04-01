@@ -1,7 +1,8 @@
-import { useGLTF, useAnimations, OrbitControls, Sky, Environment, Cloud } from '@react-three/drei'
+import { useGLTF, useAnimations, OrbitControls, Sky, Environment, Cloud, Stars, Sparkles, RandomizedLight } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import { Suspense, useEffect } from 'react'
 import Layout from "@/components/layout"
+import { useRouter } from 'next/router'
 
 import { getAllHelloWorldIds, getAllHelloWorldData } from '@/lib/hello-world'
 
@@ -25,17 +26,16 @@ export async function getStaticPaths() {
 
 export function Model({ src }) {
 
+  const router = useRouter()
+
   const { scene, animations } = useGLTF(src)
   const { names, actions } = useAnimations(animations, scene)
-
-  console.log(names)
-  console.log(actions)
 
   useEffect(() => {
     actions[names[0]].play()
   })
 
-  return <primitive object={scene} />
+  return <primitive object={scene} scale={router.query.id === 'hummingbird' ? 1 : 0.01}/>
 }
 
 export default function HelloWorld ({ src }) {
@@ -51,7 +51,10 @@ export default function HelloWorld ({ src }) {
               <Cloud scale={1.5} position={[20, 0, 0]} />
               <Cloud scale={1} position={[-20, 10, 0]} />
               <Environment preset="city" />
+              <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
               <Sky />
+              <RandomizedLight castShadow amount={8} frames={100} position={[5, 5, -10]} />
+              <Sparkles />
               <Model src={src.src}/>
             <OrbitControls />
           </Suspense>
