@@ -5,12 +5,19 @@ export default function SelectTip ({ name, options }) {
     return options.map((x, index) => {
 
       return (
-        <div
+        x === 'Custom' ?
+        <input
+          type="number"
+          placeholder='Custom'
+          className="lg:col-span-4 col-span-6 rounded w-full text-2xl text-center text-grayishcyan bg-verylightgrayishcyan"
+        /> :
+        <button
           key={ index }
-          className={`${x === 'Custom' ? 'bg-verylightgrayishcyan' : 'bg-verydarkcyan'} lg:col-span-4 col-span-6 rounded py-2 text-white text-2xl text-center`}
+          className="lg:col-span-4 col-span-6 rounded py-2 text-white text-2xl text-center bg-verydarkcyan"
         >
-          { x === 'Custom' ? <input type="number" placeholder='Custom' className="w-full text-center text-grayishcyan bg-verylightgrayishcyan"/> : x }
-        </div>
+          {x}
+        </button> 
+
       )
     })
   }, [options])
