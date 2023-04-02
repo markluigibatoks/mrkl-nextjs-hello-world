@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    font-size: 16px;
+  }
+}
+
+:root {
+  /* --primary: hsl(172, 67%, 45%);
+  --verydarkcyan: hsl(183, 100%, 15%);
+  --darkgrayishcyan: hsl(186, 14%, 43%);
+  --grayishcyan: hsl(184, 14%, 56%);
+  --lightgrayishcyan: hsl(185, 41%, 84%);
+  --verylightgrayishcyan: hsl(189, 41%, 97%);
+  --white: hsl(0, 0%, 100%); */
+
+  --primary: 38 191 171;
+  --verydarkcyan: 0 73 77;
+  --darkgrayishcyan: 94 122 125;
+  --grayishcyan: 127 156 159;
+  --lightgrayishcyan: 197 228 231;
+  --verylightgrayishcyan: 244 250 250;
+}
+

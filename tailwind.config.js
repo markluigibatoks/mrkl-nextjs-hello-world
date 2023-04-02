@@ -9,7 +9,19 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: 'rgb(var(--primary) / <alpha-value>)',
+        verydarkcyan: 'rgb(var(--verydarkcyan) / <alpha-value>)',
+        darkgrayishcyan: 'rgb(var(--darkgrayishcyan) / <alpha-value>)',
+        grayishcyan: 'rgb(var(--grayishcyan) / <alpha-value>)',
+        lightgrayishcyan: 'rgb(var(--lightgrayishcyan) / <alpha-value>)',
+        verylightgrayishcyan: 'rgb(var(--verylightgrayishcyan) / <alpha-value>)',
+      },
+      fontFamily: {
+        'space-mono': ['var(--font-space-mono)']
+      }
+    },
   },
   plugins: [],
 }
