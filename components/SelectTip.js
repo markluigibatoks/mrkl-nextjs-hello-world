@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-export default function SelectTip ({ name, options }) {
+export default function SelectTip ({ name, options, value, onChange }) {
   const ops = useMemo(() => {
     return options.map((x, index) => {
 

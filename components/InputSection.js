@@ -1,8 +1,7 @@
 import { useId } from 'react'
 import Image from 'next/image'
-import MyInput from '@/components/MyInput'
 
-export default function InputSection ({ name, icon }) {
+export default function InputSection ({ name, icon, value, onChange }) {
   const uniqueID = useId()
   return (
     <>
@@ -17,7 +16,13 @@ export default function InputSection ({ name, icon }) {
           <figure className="absolute left-4 top-1/2 -translate-y-1/2">
             <Image src={ icon } alt="icon"/>
           </figure>
-          <MyInput id={ uniqueID }/>
+          <input
+            value={ value }
+            onChange={ onChange }
+            id={ uniqueID }
+            type="number" min="0"
+            className="pr-2 pl-10 w-full h-full rounded text-right text-2xl text-grayishcyan bg-verylightgrayishcyan"
+          />
         </div>
       </div>
     </>
