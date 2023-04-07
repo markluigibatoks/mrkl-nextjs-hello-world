@@ -5,22 +5,16 @@ export default function SelectTip ({ name, options, value, onChange }) {
     return options.map((x, index) => {
 
       return (
-        x === 'Custom' ?
-        <input
-          type="number"
-          placeholder='Custom'
-          className="lg:col-span-4 col-span-6 rounded w-full text-2xl text-center text-grayishcyan bg-verylightgrayishcyan"
-        /> :
         <button
           key={ index }
-          className="lg:col-span-4 col-span-6 rounded py-2 text-white text-2xl text-center bg-verydarkcyan"
+          className={`${value === x ? 'text-verydarkcyan bg-primary' : 'text-white bg-verydarkcyan'} lg:col-span-4 hover:text-verydarkcyan hover:bg-primary/70 col-span-6 rounded py-2 text-2xl text-center`}
+          onClick={() => { onChange(x) }}
         >
-          {x}
+          {`${x * 100}%`}
         </button> 
-
       )
     })
-  }, [options])
+  }, [onChange, options, value])
   
 
   return (

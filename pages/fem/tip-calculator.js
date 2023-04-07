@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import Layout from '@/components/layout'
 import SelectTip from '@/components/SelectTip'
 import InputSection from '@/components/InputSection'
@@ -33,7 +33,15 @@ export default function TipCalculator () {
   const [tipStatus, setTipStatus] = useState('empty')
   const [tipError, setTipError] = useState(null)
 
-  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false)
+  const [customTip, setCustomTip] = useState('')
+  const [customTipStatus, setCustomTipStatus] = useState('empty')
+  const [customTipError, setCustomTipError] = useState(null)
+
+  const tipOptions = useMemo(() => {
+    return [0.05, 0.10, 0.15, 0.25, 0.35, 0.50]
+  }, [])
+
+  const [isResetDisabled, setIsResetDisabled] = useState(false)
 
   function handleDollarChange(e) {
     setDollar(e.target.value)
@@ -47,19 +55,26 @@ export default function TipCalculator () {
     setTip(value)
   }
 
-  function handleSubmitting() {
-    setDollarStatus('submitting')
-    setPaxStatus('submitting')
-    setTipStatus('submitting')
+  function calculateTip(){
+    setTipPerPerson(calculateTipPerPerson())
+    setTotalPerPerson(calculateTotalTipPerPerson())
   }
 
-  function handleReset() {
+  function calculateTipPerPerson(){
+    return (Number.parseFloat(dollar) * Number.parseFloat(tip) / Number.parseInt(pax)).toFixed(2)
+  }
+
+  function calculateTotalTipPerPerson() {
+    return ((Number.parseFloat(dollar) + (Number.parseFloat(dollar) * Number.parseFloat(tip))) / Number.parseInt(pax)).toFixed(2)
+  }
+
+  const handleReset = useCallback(() => {
     setTipPerPerson(0)
     setTotalPerPerson(0)
 
     setDollar('')
     setPax('')
-    setTip('')
+    setTip(0)
 
     setDollarStatus('empty')
     setPaxStatus('empty')
@@ -68,21 +83,47 @@ export default function TipCalculator () {
     setDollarError(null)
     setPaxError(null)
     setTipError(null)
-  }
+  }, [])
 
   useEffect(() => {
-    setIsSubmitDisabled(
+    setIsResetDisabled(
       dollar.length === 0 || 
       pax.length === 0 || 
-      tip.length === 0 || 
+      tip === 0 || 
       tipStatus === 'submitting' ||
       paxStatus === 'submitting' ||
       dollarStatus === 'submitting'
     )
-  }, [dollar.length, dollarStatus, pax.length, paxStatus, tip.length, tipStatus])
+  }, [dollar.length, dollarStatus, pax.length, paxStatus, tip, tipStatus])
+
 
   function handleSubmit(e) {
     e.preventDefault()
+
+    setDollarStatus('submitting')
+    setPaxStatus('submitting')
+    setTipStatus('submitting')
+
+    const isValid = validate()
+
+    if(isValid) {
+      calculateTip()
+    }
+
+    setDollarStatus('empty')
+    setPaxStatus('empty')
+    setTipStatus('empty')
+  }
+
+  function validate() {
+
+    const isDollarValid = Number.parseFloat(dollar) > 0
+    const isPaxValid = Number.parseInt(pax) > 0
+
+    if(!isDollarValid) setDollarError(`Can't be zero`)
+    if(!isPaxValid) setPaxError(`Can't be zero`)
+    
+    return isDollarValid && isPaxValid
   }
 
   return (
@@ -93,19 +134,20 @@ export default function TipCalculator () {
             <figure className="lg:my-20 mt-5 mb-10">
               <Image src={ logo } alt="logo" className="mx-auto" />
             </figure>
-            <form onSubmit={ handleSubmit } className="p-5 grid grid-cols-12 gap-5 rounded-3xl shadow-lg bg-white">
+            <div className="p-5 grid grid-cols-12 gap-5 rounded-3xl shadow-lg bg-white">
               <div className="lg:col-span-6 col-span-12">
                 <div className="p-5">
                   <InputSection
                     name="Bill"
                     icon={ iconDollar }
                     value={ dollar }
+                    error={ dollarError}
                     onChange={ handleDollarChange }
                   />
                   <section className='my-10'>
                     <SelectTip
                       name="Select Tip %"
-                      options={['5%', '10%', '15%', '25%', '50%', 'Custom']}
+                      options={ tipOptions }
                       value={ tip }
                       onChange={ handleTipChange }
                     />
@@ -114,6 +156,7 @@ export default function TipCalculator () {
                     name="Number of people"
                     icon={ iconPerson }
                     value={ pax }
+                    error={ paxError }
                     onChange={ handlePaxChange }
                   />
                 </div>
@@ -131,16 +174,26 @@ export default function TipCalculator () {
                       amount={totalPerPerson.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     />
                   </div>
-                  <button
-                    onClick={ handleReset }
-                    disabled={ isSubmitDisabled }
-                    className="absolute bottom-10 left-1/2 -translate-x-1/2 py-2 w-[calc(100%-80px)] rounded uppercase text-verydarkcyan bg-primary"
-                  >
-                    Reset
-                  </button>
+                  <div className="w-[calc(100%-80px)] absolute bottom-10 left-1/2 -translate-x-1/2 flex justify-center items-center gap-3">
+                    <button
+                      onClick={ handleSubmit }
+                      className="hover:bg-lightgrayishcyan w-full py-2 rounded uppercase text-verydarkcyan bg-primary"
+                    >
+                      Calculate
+                    </button>
+                    
+                    <button
+                      onClick={ handleReset }
+                      disabled={ isResetDisabled }
+                      className="hover:bg-lightgrayishcyan w-full py-2 rounded uppercase text-verydarkcyan bg-primary"
+                    >
+                      Reset
+                    </button>
+                  </div>
+                  
                 </section>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </Layout>

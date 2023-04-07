@@ -1,8 +1,9 @@
 import { useId } from 'react'
 import Image from 'next/image'
 
-export default function InputSection ({ name, icon, value, onChange }) {
+export default function InputSection ({ name, icon, value, error, onChange }) {
   const uniqueID = useId()
+
   return (
     <>
       <div>
@@ -21,7 +22,7 @@ export default function InputSection ({ name, icon, value, onChange }) {
             onChange={ onChange }
             id={ uniqueID }
             type="number" min="0"
-            className="pr-2 pl-10 w-full h-full rounded text-right text-2xl text-grayishcyan bg-verylightgrayishcyan"
+            className={`${!error ? 'border-0' : 'border border-red-500'} pr-2 pl-10 w-full h-full rounded text-right text-2xl text-grayishcyan bg-verylightgrayishcyan`}
           />
         </div>
       </div>
