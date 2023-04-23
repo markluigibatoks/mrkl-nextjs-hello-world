@@ -1,6 +1,6 @@
-import { useGLTF, useAnimations, OrbitControls, Sky, Environment, Cloud, Stars, Sparkles, RandomizedLight } from '@react-three/drei'
+import { Preload, AdaptiveDpr, AdaptiveEvents, PerformanceMonitor, Loader, useGLTF, useAnimations, OrbitControls, Sky, Environment, Cloud, Stars, Sparkles, RandomizedLight } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
-import { Suspense, useEffect } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import Layout from "@/components/layout"
 import { useRouter } from 'next/router'
 
@@ -40,10 +40,13 @@ export function Model({ src }) {
 
 export default function HelloWorld ({ src }) {
 
+  const [dpr, setDpr] = useState(2)
+
   return (
     <>
       <Layout>
         <Canvas>
+          <PerformanceMonitor factor={1} onChange={({ factor }) => setDpr(Math.round(0.5 + 1.5 * factor, 1))} />
             <Suspense fallback={null}>
               <hemisphereLight intensity={0.45} />
               <spotLight angle={0.4} penumbra={1} position={[20, 30, 2.5]} castShadow shadow-bias={-0.00001} />
@@ -56,9 +59,13 @@ export default function HelloWorld ({ src }) {
               <RandomizedLight castShadow amount={8} frames={100} position={[5, 5, -10]} />
               <Sparkles />
               <Model src={src.src}/>
+              <AdaptiveDpr pixelated />
+              <AdaptiveEvents />
+              <Preload all />
             <OrbitControls />
           </Suspense>
         </Canvas>
+        <Loader />
       </Layout>
     </>
   )
